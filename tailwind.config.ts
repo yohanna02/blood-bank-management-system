@@ -3,4 +3,4 @@
  **
  ** Docs: https://tailwindcss.com/docs/configuration
  */
- module.exports = {};
+module.exports = {};
