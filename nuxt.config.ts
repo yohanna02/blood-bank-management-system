@@ -4,5 +4,8 @@ export default defineNuxtConfig({
     tailwindcss: {
         // add '~tailwind.config` alias
         exposeConfig: true
+    },
+    runtimeConfig: {
+        jwtScecret: ""
     }
 });
