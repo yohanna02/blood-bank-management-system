@@ -15,3 +15,28 @@ model User {
   email    String @unique
   password String
 }
+
+model BloodGroup {
+  id            String   @id @default(uuid())
+  name          String   @unique
+  pintAvailable Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  Donor         Donor[]
+}
+
+enum DonorSex {
+  MALE
+  FEMALE
+}
+
+model Donor {
+  id           String     @id @default(uuid())
+  name         String
+  bloodGroup   BloodGroup @relation(fields: [bloodGroupId], references: [id])
+  bloodGroupId String
+  sex          DonorSex
+  email        String
+  phoneNumber  String
+  createdAt    DateTime   @default(now())
+}
