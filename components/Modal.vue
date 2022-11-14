@@ -9,8 +9,8 @@
       >
         &times;
       </p>
-      <h3 class="text-center font-bold">Add Donor</h3>
-      <form>
+      <h3 class="text-center font-bold">Add {{props.modalType === "ADD DONOR" ? "Donor" : "Blood Group"}}</h3>
+      <form v-if="props.modalType === 'ADD DONOR'">
         <section class="flex flex-col">
           <label for="name">Name</label>
           <input type="text" id="name" class="border rounded-md p-2" />
@@ -48,6 +48,22 @@
           Add Donor
         </button>
       </form>
+      <form v-else>
+        <section class="flex flex-col">
+          <label for="blood-group-name">Blood Group Name</label>
+          <input type="text" id="blood-group-name" class="border rounded-md p-2" />
+        </section>
+        <section class="flex flex-col">
+          <label for="pint-avaliable">Pint Available</label>
+          <input type="number" id="pint-avaliable" class="border rounded-md p-2" />
+        </section>
+        <button
+          type="submit"
+          class="bg-red-500 hover:bg-red-700 rounded-md text-white w-1/2 mx-auto mt-4 p-4 block outline-offset-4"
+        >
+          Add Blood Group
+        </button>
+      </form>
     </div>
   </div>
 </template>
@@ -56,6 +72,16 @@
 const emit = defineEmits<{
   (event: "close-modal"): void;
 }>();
+
+type modalTypes = "ADD DONOR" | "ADD BLOOD GROUP";
+
+interface Props {
+  modalType: modalTypes
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  modalType: "ADD DONOR"
+});
 </script>
 
 <style scoped>
