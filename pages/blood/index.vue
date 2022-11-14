@@ -11,6 +11,7 @@
           class="p-2 mt-10 border w-1/2 rounded-md"
         />
       </section>
+      <button class="bg-red-500 hover:bg-red-700 rounded-md text-white w-1/2 mx-auto mt-4 p-4 block outline-offset-4">Add new Blood group</button>
       <section class="w-full">
         <BloodList />
       </section>
