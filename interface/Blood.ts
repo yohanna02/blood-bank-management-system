@@ -1,5 +1,4 @@
-export interface BloodI {
-    id: string;
-    bloodGroup: string;
-    stock: number;
+export interface BloodGroupI {
+    name: string;
+    pintAvailable: number;
 };
