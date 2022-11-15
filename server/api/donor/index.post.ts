@@ -14,6 +14,7 @@ const donorSchema = joi.object<DonorI>({
 });
 
 export default defineEventHandler(async (event) => {
+    if (!event.context.user) throw createServerError(401, "unauthorize");
     const body = await readBody<DonorI>(event);
 
     const error = validator(donorSchema, body);

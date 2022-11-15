@@ -7,10 +7,9 @@ const config = useRuntimeConfig();
 
 export default defineEventHandler(async (event) => {
     const endpoints = [
-        "/api/v2/auth/user",
-        "/api/v2/auth/logout",
-        "/api/v2/auth/password/update",
-        "/api/v2/auth/unregister"
+        "/api/bloodGroup",
+        "/api/bloodGroup/:id",
+        "/api/donor"
     ];
 
     const isHandledMyThisMiddleware = endpoints.some(endpoint => {

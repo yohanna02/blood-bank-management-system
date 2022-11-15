@@ -11,6 +11,8 @@ const bloodGroupSchema = joi.object<BloodGroupI>({
 });
 
 export default defineEventHandler(async (event) => {
+    if (!event.context.user) throw createServerError(401, "unauthorize");
+
     const body = await readBody<BloodGroupI>(event);
 
     const error = validator(bloodGroupSchema, body);
