@@ -5,7 +5,9 @@
             <li><NuxtLink to="/" class="hover:underline outline-offset-8">Home</NuxtLink></li>
             <li><NuxtLink to="/blood" class="hover:underline outline-offset-8">Manage Blood</NuxtLink></li>
             <li><NuxtLink to="/donor" class="hover:underline outline-offset-8">Manage Donor</NuxtLink></li>
-            <li><NuxtLink to="/login" class="hover:underline outline-offset-8">Login</NuxtLink></li>
+            <li><NuxtLink to="/login" class="hover:underline outline-offset-8">Login</NuxtLink></li> | 
+            <li><NuxtLink to="/register" class="hover:underline outline-offset-8">Register</NuxtLink></li>
+
         </ul>
     </nav>
     <slot />
