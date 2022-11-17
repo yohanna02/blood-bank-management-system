@@ -69,7 +69,12 @@ export default () => {
     }
 
     const initAuth = async () => {
-        
+        const userString = localStorage.getItem("user");
+        if (userString) {
+            const user = JSON.parse(userString);
+            setAuth(user, null);
+            navigateTo("/blood");
+        }
     }
 
     return {
