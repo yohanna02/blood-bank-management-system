@@ -51,6 +51,6 @@ const registerUser = async () => {
     loading.value = false;
 
     if (!errorDetails.value && !errorMessage.value)
-        router.push({path: "/blood"});
+        navigateTo("/blood");
 };
 </script>

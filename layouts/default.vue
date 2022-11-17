@@ -20,6 +20,8 @@ const user = useUser();
 
 const logoutUser = async () => {
     await logout();
+    useLocalStorage("accessToken", "").value = null;
+    navigateTo("/login");
 }
 </script>
 
