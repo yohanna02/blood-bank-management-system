@@ -20,3 +20,17 @@ export const createServerError = <T>(statusCode: number, message?: string, error
         }
     });
 }
+
+export interface ErrorDetailsI {
+    message: string;
+    path:    string[];
+    type:    string;
+    context: Context;
+}
+
+interface Context {
+    value:    string;
+    invalids: string[];
+    label:    string;
+    key:      string;
+}
