@@ -66,6 +66,8 @@ export default () => {
     const logout = async () => {
         setAccessToken(null);
         setUser(null);
+        useLocalStorage("user", "").value = null;
+        navigateTo("/login");
     }
 
     const initAuth = async () => {
@@ -82,6 +84,7 @@ export default () => {
         login,
         register,
         logout,
-        initAuth
+        initAuth,
+        useAccessToken
     }
 }

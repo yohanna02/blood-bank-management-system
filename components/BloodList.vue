@@ -10,8 +10,8 @@
       />
     </div>
     <div class="flex justify-between items-center sm:w-1/3 w-11/12">
-      <p class="sm:text-2xl text-lg">A+</p>
-      <p class="sm:text-xl text-sm"><b>Pint available:</b> 44</p>
+      <p class="sm:text-2xl text-lg">{{props.bloodGroupName}}</p>
+      <p class="sm:text-xl text-sm"><b>Pint available:</b> {{props.pintAvailable}}</p>
     </div>
     <div class="sm:w-full w-10/12 flex gap-10 justify-end items-center">
         <NuxtLink to="/blood/1" class="outline-offset-8 transition ease-in cursor-pointer">
@@ -24,4 +24,9 @@
   </div>
 </template>
 
-
+<script setup lang="ts">
+const props = defineProps<{
+  bloodGroupName: string;
+  pintAvailable: number;
+}>();
+</script>

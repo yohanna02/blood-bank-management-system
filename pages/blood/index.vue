@@ -18,16 +18,53 @@
         Add new Blood group
       </button>
       <section class="w-full">
-        <BloodList />
+        <BloodList 
+          v-for="bloodGroup in bloodGroupList" 
+          :key="bloodGroup.id" 
+          :blood-group-name="bloodGroup.name"
+          :pint-available="bloodGroup.pintAvailable"
+        />
       </section>
     </div>
   </NuxtLayout>
-  <Modal v-if="showModal" @close-modal="showModal = !showModal" modal-type="ADD BLOOD GROUP"/>
+  <Modal
+    v-if="showModal"
+    @close-modal="showModal = !showModal"
+    modal-type="ADD BLOOD GROUP"
+  />
 </template>
 
 <script setup lang="ts">
+import { BloodGroupI } from "~~/interface/Blood";
+interface BloodGroupI_E extends BloodGroupI {
+  id: string;
+};
+
 definePageMeta({
-  middleware: "auth"
+  middleware: "auth",
 });
+
 const showModal = ref(false);
+
+const bloodGroupList = ref<BloodGroupI_E[]>([]);
+
+const { useAccessToken, logout } = useAuth();
+
+const { data, error } = await useFetch<{success: boolean, bloodGroups: BloodGroupI_E[]}>("/api/bloodGroup", {
+  method: "get",
+  headers: {
+    authorization: `Bearer ${useAccessToken().value}`
+  }
+});
+
+if (error.value) {
+  if (error.value?.statusCode === 401) {
+    logout();
+  }
+}
+else {
+  if (data.value?.bloodGroups)
+    bloodGroupList.value = data.value?.bloodGroups;
+}
+
 </script>
