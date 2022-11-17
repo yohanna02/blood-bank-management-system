@@ -37,6 +37,8 @@ const email = ref("");
 const password = ref("");
 const loading = ref(false);
 
+const router = useRouter();
+
 const { register } = useAuth();
 const { getErrorDetails, getErrorMessage } = useErrors();
 
@@ -49,6 +51,6 @@ const registerUser = async () => {
     loading.value = false;
 
     if (!errorDetails.value && !errorMessage.value)
-        navigateTo("/blood");
+        router.push({path: "/blood"});
 };
 </script>

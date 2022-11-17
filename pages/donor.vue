@@ -44,6 +44,9 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  middleware: "auth"
+});
 const showModal = ref(false);
 </script>
 
