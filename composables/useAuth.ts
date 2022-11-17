@@ -1,4 +1,4 @@
-import { AuthI } from "~~/interface/User";
+import { AuthI, AuthResponseI } from "~~/interface/User";
 // import { useStorage } from "@vueuse/core";
 
 export default () => {
@@ -18,15 +18,39 @@ export default () => {
         user.value = newUser;
     }
 
+    const setAuth = (data: AuthResponseI | null, error: any) => {
+        if (error) {
+            if (error.data?.data?.errorDetails?.details) {
+                setErrorDetails(error.data.data.errorDetails.details);
+                setErrorMessage(null);
+            }
+            else {
+                setErrorDetails(null);
+                setErrorMessage(error.data.data.message);
+            }
+            clearError();
+        }
+        else {
+            setUser(data?.user.email);
+            setAccessToken(data?.accessToken);
+            useLocalStorage("user", data);
+            setErrorDetails(null);
+            setErrorMessage(null);
+        }
+    }
+
     const login = async (body: AuthI) => {
+        setErrorDetails(null);
+        setErrorMessage(null);
         const { data, error } = await useFetch("/api/auth/login", {
             method: "post",
             body
         });
 
+        setAuth(data.value, error.value);
         
     }
-
+ 
     const register = async(body: AuthI) => {
         setErrorDetails(null);
         setErrorMessage(null);
@@ -34,24 +58,9 @@ export default () => {
             method: "post",
             body
         });
-        if (error.value) {
-            if (error.value?.data?.data?.errorDetails?.details) {
-                setErrorDetails(error.value?.data.data.errorDetails.details);
-                setErrorMessage(null);
-            }
-            else {
-                setErrorDetails(null);
-                setErrorMessage(error.value?.data.data.message);
-            }
-            clearError();
-        }
-        else {
-            setUser(data.value?.user.email);
-            setAccessToken(data.value?.accessToken);
-            useLocalStorage("accessToken", data.value?.accessToken);
-            setErrorDetails(null);
-            setErrorMessage(null);
-        }
+
+        setAuth(data.value, error.value);
+        
     }
 
     const logout = async () => {
