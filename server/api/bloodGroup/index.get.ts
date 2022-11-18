@@ -3,7 +3,7 @@ import prisma from "~~/server/db";
 
 export default defineEventHandler(async (event) => {
     if (!event.context.user) throw createServerError(401, "unauthorize");
-    const bloodGroups = await prisma.bloodGroup.findMany();
+    const bloodGroups = await prisma.bloodGroup.findMany({ orderBy: { createdAt: "desc" } });
 
     return {
         success: true,

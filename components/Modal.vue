@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-black w-full absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-opacity-80"
+    class="bg-black w-full fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-opacity-80"
   >
     <div class="w-full sm:w-1/2 bg-white p-5 opacity- rounded-md relative">
       <p
@@ -48,14 +48,14 @@
           Add Donor
         </button>
       </form>
-      <form v-else>
+      <form v-else @submit.prevent="addBloodGroup">
         <section class="flex flex-col">
           <label for="blood-group-name">Blood Group Name</label>
-          <input type="text" id="blood-group-name" class="border rounded-md p-2" />
+          <input type="text" id="blood-group-name" class="border rounded-md p-2" v-model="bloodGroupName" />
         </section>
         <section class="flex flex-col">
           <label for="pint-avaliable">Pint Available</label>
-          <input type="number" id="pint-avaliable" class="border rounded-md p-2" />
+          <input type="number" id="pint-avaliable" class="border rounded-md p-2" v-model.number="pintAvailable" />
         </section>
         <button
           type="submit"
@@ -71,6 +71,7 @@
 <script setup lang="ts">
 const emit = defineEmits<{
   (event: "close-modal"): void;
+  (event: "refresh-blood-list"): void;
 }>();
 
 type modalTypes = "ADD DONOR" | "ADD BLOOD GROUP";
@@ -82,6 +83,29 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   modalType: "ADD DONOR"
 });
+
+const bloodGroupName = ref("");
+const pintAvailable = ref(0);
+
+const { useAccessToken } = useAuth();
+
+const addBloodGroup = async () => {
+  const { data, error } = await useFetch<{success: boolean, message: string}>("/api/bloodGroup", {
+    method: "post",
+    body: {
+      name: bloodGroupName.value,
+      pintAvailable: pintAvailable.value
+    },
+    headers: {
+      authorization: `Bearer ${useAccessToken().value}`
+    }
+  });
+
+  if (!error.value) {
+    alert(data.value?.message);
+    emit("refresh-blood-list");
+  }
+};
 </script>
 
 <style scoped>

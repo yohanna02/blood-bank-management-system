@@ -30,6 +30,7 @@
   <Modal
     v-if="showModal"
     @close-modal="showModal = !showModal"
+    @refresh-blood-list="refreshBloodList"
     modal-type="ADD BLOOD GROUP"
   />
 </template>
@@ -41,7 +42,7 @@ interface BloodGroupI_E extends BloodGroupI {
 };
 
 definePageMeta({
-  middleware: "auth",
+  middleware: "auth"
 });
 
 const showModal = ref(false);
@@ -50,21 +51,39 @@ const bloodGroupList = ref<BloodGroupI_E[]>([]);
 
 const { useAccessToken, logout } = useAuth();
 
-const { data, error } = await useFetch<{success: boolean, bloodGroups: BloodGroupI_E[]}>("/api/bloodGroup", {
-  method: "get",
-  headers: {
-    authorization: `Bearer ${useAccessToken().value}`
+interface ResponseI {
+  success: boolean;
+  bloodGroups: BloodGroupI_E[];
+}
+
+let refreshBloodList: any = null;
+
+onMounted(async() => {
+  const { refresh } = await useFetch<ResponseI>("/api/bloodGroup", {
+    method: "get",
+    headers: {
+      authorization: `Bearer ${useAccessToken().value}`
+    },
+    onResponse({request, response, options}) {
+      bloodGroupList.value = response._data.bloodGroups;
+    },
+    onResponseError({request, response, options}) {
+      if (response.status === 401) {
+        logout();
+      }
+      else {
+        alert("Error");
+      }
+    }
+  });
+  
+  refreshBloodList = () => {
+    refresh();
   }
 });
-
-if (error.value) {
-  if (error.value?.statusCode === 401) {
-    logout();
-  }
-}
-else {
-  if (data.value?.bloodGroups)
-    bloodGroupList.value = data.value?.bloodGroups;
-}
+// else {
+//   if (data.value?.bloodGroups)
+//     bloodGroupList.value = data.value?.bloodGroups;
+// }
 
 </script>
