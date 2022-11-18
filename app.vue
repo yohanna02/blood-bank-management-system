@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto">
     <NuxtLoadingIndicator color="green" />
-    <NuxtPage />
+    <NuxtPage keepalive />
   </div>
 </template>
 
