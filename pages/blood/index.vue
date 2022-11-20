@@ -54,7 +54,7 @@ const bloodGroupList = computed(() => {
     return getBloodGroup();
 
   return getBloodGroup().filter(bloodGroup => {
-    if (bloodGroup.name.includes(searchText.value)) return true;
+    if (bloodGroup.name.toLowerCase().includes(searchText.value.toLowerCase())) return true;
     
     return false;
   });
