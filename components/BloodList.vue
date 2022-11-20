@@ -14,10 +14,10 @@
       <p class="sm:text-xl text-sm"><b>Pint available:</b> {{props.pintAvailable}}</p>
     </div>
     <div class="sm:w-full w-10/12 flex gap-10 justify-end items-center">
-        <NuxtLink to="/blood/1" class="outline-offset-8 transition ease-in cursor-pointer">
+        <NuxtLink :to="String('/blood/' + props.bloodGroupId)" class="outline-offset-8 transition ease-in cursor-pointer">
             <IconsEdit class="w-5 transition duration-1000 ease-in-out hover:w-7" />
         </NuxtLink>
-        <button class="outline-offset-8 transition ease-in  cursor-pointer">
+        <button class="outline-offset-8 transition ease-in  cursor-pointer" @click="deleteBloodGroup">
             <IconsDelete class="w-5 transition duration-1000 ease-in-out hover:w-7" />
         </button>
     </div>
@@ -26,7 +26,31 @@
 
 <script setup lang="ts">
 const props = defineProps<{
+  bloodGroupId: string;
   bloodGroupName: string;
   pintAvailable: number;
 }>();
+
+const { useAccessToken } = useAuth();
+const { useBloodGroup } = useData();
+
+const deleteBloodGroup = async () => {
+  if (!confirm("Are you sure you want to delete this Blood Group!")) return;
+
+  try {
+    const data = await $fetch<{success: boolean, message: string}>(`/api/bloodGroup/${props.bloodGroupId}`, {
+      method: "delete",
+      headers: {
+        authorization: `Bearer ${useAccessToken().value}`
+      }
+    });
+
+    alert(data.message);
+    const bloodGroup = useBloodGroup();
+    const filteredBloodGroup = bloodGroup.value.filter(BG => BG.id !== props.bloodGroupId);
+    bloodGroup.value = filteredBloodGroup;
+  } catch(err: any) {
+    alert("An Error occured");
+  }
+}
 </script>

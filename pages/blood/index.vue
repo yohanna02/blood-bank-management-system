@@ -21,6 +21,7 @@
         <BloodList 
           v-for="bloodGroup in bloodGroupList" 
           :key="bloodGroup.id" 
+          :blood-group-id="bloodGroup.id"
           :blood-group-name="bloodGroup.name"
           :pint-available="bloodGroup.pintAvailable"
         />
@@ -30,16 +31,15 @@
   <Modal
     v-if="showModal"
     @close-modal="showModal = !showModal"
-    @refresh-blood-list="refreshBloodList"
+    @refresh-blood-list="fetchBloodGroups"
     modal-type="ADD BLOOD GROUP"
   />
 </template>
 
 <script setup lang="ts">
-import { BloodGroupI } from "~~/interface/Blood";
-interface BloodGroupI_E extends BloodGroupI {
-  id: string;
-};
+import { BloodGroup } from '.prisma/client';
+
+const { setBloodGroup, getBloodGroup } = useData();
 
 definePageMeta({
   middleware: "auth"
@@ -47,43 +47,31 @@ definePageMeta({
 
 const showModal = ref(false);
 
-const bloodGroupList = ref<BloodGroupI_E[]>([]);
+const bloodGroupList = computed(() => getBloodGroup());
 
 const { useAccessToken, logout } = useAuth();
 
 interface ResponseI {
   success: boolean;
-  bloodGroups: BloodGroupI_E[];
-}
+  bloodGroups: BloodGroup[];
+};
 
-let refreshBloodList: any = null;
+const fetchBloodGroups = async () => {
+  try {
+    const data = await $fetch<ResponseI>("/api/bloodGroup", {
+      headers: {
+        authorization: `Bearer ${useAccessToken().value}`
+      }
+    });
+
+    setBloodGroup(data.bloodGroups);
+  } catch(err: any) {
+    alert("Error Fetching blood list");
+  }
+};
 
 onMounted(async() => {
-  const { refresh } = await useFetch<ResponseI>("/api/bloodGroup", {
-    method: "get",
-    headers: {
-      authorization: `Bearer ${useAccessToken().value}`
-    },
-    onResponse({request, response, options}) {
-      bloodGroupList.value = response._data.bloodGroups;
-    },
-    onResponseError({request, response, options}) {
-      if (response.status === 401) {
-        logout();
-      }
-      else {
-        alert("Error");
-      }
-    }
-  });
-  
-  refreshBloodList = () => {
-    refresh();
-  }
+  await fetchBloodGroups();
 });
-// else {
-//   if (data.value?.bloodGroups)
-//     bloodGroupList.value = data.value?.bloodGroups;
-// }
 
 </script>
