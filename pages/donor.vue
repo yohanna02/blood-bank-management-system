@@ -23,19 +23,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Yohanna Philip</td>
-          <td>A+</td>
-          <td>Male</td>
-          <td>yohanaabana02@gmail.com</td>
-          <td>09022107944</td>
-        </tr>
-        <tr>
-          <td>Yohanna Philip</td>
-          <td>A+</td>
-          <td>Male</td>
-          <td>yohanaabana02@gmail.com</td>
-          <td>09022107944</td>
+        <tr v-for="donor in donors" :key="donor.id">
+          <td>{{donor.name}}</td>
+          <td>{{donor.bloodGroup.name}}</td>
+          <td>{{donor.sex}}</td>
+          <td>{{donor.email}}</td>
+          <td>{{donor.phoneNumber}}</td>
         </tr>
       </tbody>
     </table>
@@ -44,10 +37,32 @@
 </template>
 
 <script setup lang="ts">
+import { DonorI } from '~~/composables/useData';
+
 definePageMeta({
   middleware: "auth"
 });
 const showModal = ref(false);
+
+const { useAccessToken } = useAuth();
+const { setDonor, getDonor } = useData();
+
+const donors = computed(() => getDonor());
+
+onMounted(async() => {
+  try {
+    const data = await $fetch<{success: boolean, donors: DonorI[]}>("/api/donor", {
+      headers: {
+        authorization: `Bearer ${useAccessToken().value}`
+      }
+    });
+
+    setDonor(data.donors);
+  } catch(err) {
+    alert("Error Fetch donors list");
+  }
+});
+
 </script>
 
 <style scoped>
