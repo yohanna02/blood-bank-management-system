@@ -8,6 +8,8 @@ export default defineEventHandler(async (event) => {
         throw createServerError(422, "Invalid params");
     }
 
+    await prisma.donor.deleteMany({where: { bloodGroupId }});
+
     await prisma.bloodGroup.delete({ where: { id: bloodGroupId } });
 
     return {
