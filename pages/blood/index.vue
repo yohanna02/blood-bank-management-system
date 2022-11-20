@@ -9,6 +9,7 @@
           type="search"
           placeholder="Search Blood Bank"
           class="p-2 mt-10 border w-1/2 rounded-md"
+          v-model="searchText"
         />
       </section>
       <button
@@ -46,10 +47,20 @@ definePageMeta({
 });
 
 const showModal = ref(false);
+const searchText = ref("");
 
-const bloodGroupList = computed(() => getBloodGroup());
+const bloodGroupList = computed(() => {
+  if (searchText.value === "")
+    return getBloodGroup();
 
-const { useAccessToken, logout } = useAuth();
+  return getBloodGroup().filter(bloodGroup => {
+    if (bloodGroup.name.includes(searchText.value)) return true;
+    
+    return false;
+  });
+});
+
+const { useAccessToken } = useAuth();
 
 interface ResponseI {
   success: boolean;
