@@ -33,7 +33,7 @@
       </tbody>
     </table>
   </NuxtLayout>
-  <Modal v-if="showModal" @close-modal="showModal = !showModal"/>
+  <Modal v-if="showModal" @close-modal="closeModal"/>
 </template>
 
 <script setup lang="ts">
@@ -44,12 +44,17 @@ definePageMeta({
 });
 const showModal = ref(false);
 
+const closeModal = async () => {
+  showModal.value = !showModal.value;
+  await fetchDonors();
+}
+
 const { useAccessToken } = useAuth();
 const { setDonor, getDonor } = useData();
 
 const donors = computed(() => getDonor());
 
-onMounted(async() => {
+const fetchDonors = async() => {
   try {
     const data = await $fetch<{success: boolean, donors: DonorI[]}>("/api/donor", {
       headers: {
@@ -61,6 +66,10 @@ onMounted(async() => {
   } catch(err) {
     alert("Error Fetch donors list");
   }
+}
+
+onMounted(async() => {
+  await fetchDonors();
 });
 
 </script>

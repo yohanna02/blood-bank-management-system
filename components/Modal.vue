@@ -10,36 +10,35 @@
         &times;
       </p>
       <h3 class="text-center font-bold">Add {{props.modalType === "ADD DONOR" ? "Donor" : "Blood Group"}}</h3>
-      <form v-if="props.modalType === 'ADD DONOR'">
+      <form v-if="props.modalType === 'ADD DONOR'" @submit.prevent="addDonor">
         <section class="flex flex-col">
           <label for="name">Name</label>
-          <input type="text" id="name" class="border rounded-md p-2" />
+          <input type="text" id="name" class="border rounded-md p-2" v-model="name" />
         </section>
         <section class="flex flex-col">
           <label for="blood-group">Blood Group</label>
-          <select id="blood-group" class="border rounded-md p-2">
+          <select id="blood-group" class="border rounded-md p-2" v-model="bloodGroupId">
             <option value="" disabled>Select Blood Group</option>
-            <option value="">A+</option>
-            <option value="">B+</option>
-            <option value="">O+</option>
-            <option value="">O-</option>
+            <option v-for="bloodGroup in bloodGroups" :key="bloodGroup.id" :value="bloodGroup.id">
+              {{bloodGroup.name}}
+            </option>
           </select>
         </section>
         <section class="flex flex-col">
           <label for="gender">Sex</label>
-          <select id="gender" class="border rounded-md p-2">
+          <select id="gender" class="border rounded-md p-2" v-model="sex">
             <option value="" disabled>Select Gender</option>
-            <option value="">Male</option>
-            <option value="">Female</option>
+            <option value="MALE">Male</option>
+            <option value="FEMALE">Female</option>
           </select>
         </section>
         <section class="flex flex-col">
           <label for="email">Email</label>
-          <input type="email" id="email" class="border rounded-md p-2" />
+          <input type="email" id="email" class="border rounded-md p-2" v-model="email" />
         </section>
         <section class="flex flex-col">
           <label for="phone-number">Phone Number</label>
-          <input type="tel" id="phone-number" class="border rounded-md p-2" />
+          <input type="tel" id="phone-number" class="border rounded-md p-2" v-model="phoneNumber" />
         </section>
         <button
           type="submit"
@@ -69,6 +68,8 @@
 </template>
 
 <script setup lang="ts">
+import { BloodGroup, DonorSex } from '.prisma/client';
+
 const emit = defineEmits<{
   (event: "close-modal"): void;
   (event: "refresh-blood-list"): void;
@@ -84,6 +85,13 @@ const props = withDefaults(defineProps<Props>(), {
   modalType: "ADD DONOR"
 });
 
+const name = ref("");
+const bloodGroupId = ref("");
+const sex = ref<DonorSex | "">("");
+const email = ref("");
+const phoneNumber = ref("");
+
+const bloodGroups = ref<BloodGroup[]>([]);
 const bloodGroupName = ref("");
 const pintAvailable = ref(0);
 
@@ -106,6 +114,44 @@ const addBloodGroup = async () => {
     emit("refresh-blood-list");
   }
 };
+
+const addDonor = async () => {
+  try {
+    const data = await $fetch<{success: boolean, message: string}>("/api/donor", {
+      method: "post",
+      body: {
+        name: name.value,
+        bloodGroupId: bloodGroupId.value,
+        sex: sex.value,
+        email: email.value,
+        phoneNumber: phoneNumber.value
+      },
+      headers: {
+        authorization: `Bearer ${useAccessToken().value}`
+      }
+    });
+
+    alert(data.message);
+  } catch(err) {
+    alert("Error occured");
+  }
+}
+
+onMounted(async () => {
+  try {
+    if (props.modalType === "ADD DONOR") {
+      const data = await $fetch<{success: boolean, bloodGroups: BloodGroup[]}>("/api/bloodGroup", {
+        headers: {
+          authorization: `Bearer ${useAccessToken().value}`
+        }
+      });
+
+      bloodGroups.value = data.bloodGroups;
+    }
+  } catch(err) {
+    alert("Error");
+  }
+});
 </script>
 
 <style scoped>
