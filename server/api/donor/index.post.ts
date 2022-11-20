@@ -37,7 +37,9 @@ export default defineEventHandler(async (event) => {
         }
     });
 
-    return  {
+    await prisma.bloodGroup.update({ where: { id: body.bloodGroupId }, data: { pintAvailable: ++bloodGroupExist.pintAvailable } });
+
+    return {
         success: true,
         message: "Add donor successfully"
     };
