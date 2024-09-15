@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
         throw createServerError(422, "Invalid Params", error);
     }
 
-    const user = await prisma.user.findUnique({ where: { email: body.email } });
+    const user = await prisma.donor.findUnique({ where: { email: body.email } });
     if (!user) {
         throw createServerError(404, "Email address not registered");
     }
@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
         throw createServerError(422, "Password not correct");
     }
 
-    const accessToken = jwt.sign({ id: user.id }, config.jwtScecret, { expiresIn: "1h" });
+    const accessToken = jwt.sign({ id: user.id }, config.jwtScecret2, { expiresIn: "1h" });
 
     return {
         user: {

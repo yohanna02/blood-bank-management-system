@@ -20,6 +20,7 @@
           <th>Sex</th>
           <th>Email</th>
           <th>Phone Number</th>
+          <th>Location</th>
         </tr>
       </thead>
       <tbody>
@@ -29,15 +30,16 @@
           <td>{{donor.sex}}</td>
           <td>{{donor.email}}</td>
           <td>{{donor.phoneNumber}}</td>
+          <td>{{donor.location}}</td>
         </tr>
       </tbody>
     </table>
   </NuxtLayout>
-  <Modal v-if="showModal" @close-modal="closeModal"/>
+  <Modal v-if="showModal" @close-modal="closeModal" modal-type="ADD DONOR"/>
 </template>
 
 <script setup lang="ts">
-import { DonorI } from '~~/composables/useData';
+import type { DonorI } from '~~/composables/useData';
 
 definePageMeta({
   middleware: "auth"
@@ -61,6 +63,8 @@ const fetchDonors = async() => {
         authorization: `Bearer ${useAccessToken().value}`
       }
     });
+
+    console.log(data);
 
     setDonor(data.donors);
   } catch(err) {

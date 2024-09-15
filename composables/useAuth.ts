@@ -1,4 +1,4 @@
-import { AuthI, AuthResponseI } from "~~/interface/User";
+import type { AuthI, AuthResponseI, DonorReg } from "~~/interface/User";
 // import { useStorage } from "@vueuse/core";
 
 export default () => {
@@ -39,35 +39,52 @@ export default () => {
         }
     }
 
-    const login = async (body: AuthI) => {
+    const login = async (body: AuthI, loginType: "admin" | "donor" = "admin") => {
         setErrorDetails(null);
         setErrorMessage(null);
-        const { data, error } = await useFetch("/api/auth/login", {
-            method: "post",
-            body
-        });
+        if (loginType == "admin") {
+            const { data, error } = await useFetch("/api/auth/login", {
+                method: "post",
+                body
+            });
 
-        setAuth(data.value, error.value);
-        
+            setAuth(data.value, error.value);
+        } else {
+            const { data, error } = await useFetch("/api/auth/donor-login", {
+                method: "post",
+                body
+            });
+
+            console.log(error);
+            setAuth(data.value, error.value);
+        }
     }
- 
-    const register = async(body: AuthI) => {
+
+    const register = async (body: AuthI | DonorReg, loginType: "admin" | "donor" = "admin") => {
         setErrorDetails(null);
         setErrorMessage(null);
-        const { data, error } = await useFetch("/api/auth/register", {
-            method: "post",
-            body
-        });
+        if (loginType == "admin") {
+            const { data, error } = await useFetch("/api/auth/register", {
+                method: "post",
+                body
+            });
 
-        setAuth(data.value, error.value);
-        
+            setAuth(data.value, error.value);
+        } else {
+            const { data, error } = await useFetch("/api/auth/donor-register", {
+                method: "POST",
+                body
+            });
+
+            setAuth(data.value, error.value);
+        }
     }
 
     const logout = async () => {
         setAccessToken(null);
         setUser(null);
         useLocalStorage("user", "").value = null;
-        navigateTo("/login");
+        navigateTo("/");
     }
 
     const initAuth = async () => {
@@ -75,7 +92,7 @@ export default () => {
         if (userString) {
             const user = JSON.parse(userString);
             setAuth(user, null);
-            navigateTo("/blood");
+            navigateTo("/admin/blood");
         }
     }
 

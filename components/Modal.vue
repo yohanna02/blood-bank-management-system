@@ -68,7 +68,8 @@
 </template>
 
 <script setup lang="ts">
-import { BloodGroup, DonorSex } from '.prisma/client';
+import type { BloodGroup, DonorSex } from '@prisma/client';
+
 
 const emit = defineEmits<{
   (event: "close-modal"): void;

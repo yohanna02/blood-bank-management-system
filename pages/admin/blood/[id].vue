@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { BloodGroup } from '.prisma/client';
+import type { BloodGroup } from '@prisma/client';
 
 const { useAccessToken } = useAuth();
 const { useBloodGroup, setBloodGroup } = useData();

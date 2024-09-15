@@ -36,7 +36,9 @@ model Donor {
   bloodGroup   BloodGroup @relation(fields: [bloodGroupId], references: [id])
   bloodGroupId String
   sex          DonorSex
-  email        String
+  email        String     @unique
   phoneNumber  String
+  password     String
+  location     String
   createdAt    DateTime   @default(now())
 }

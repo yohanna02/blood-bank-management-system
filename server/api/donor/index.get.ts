@@ -10,7 +10,8 @@ export default defineEventHandler(async (event) => {
         phoneNumber: true,
         email: true,
         createdAt: true,
-        bloodGroup: true
+        bloodGroup: true,
+        location: true
     }});
 
 

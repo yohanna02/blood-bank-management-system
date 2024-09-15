@@ -14,7 +14,7 @@
     "@types/node": "^18.11.9",
     "@vueuse/core": "^9.5.0",
     "@vueuse/nuxt": "^9.5.0",
-    "nuxt": "3.0.0-rc.13",
+    "nuxt": "3.13.1",
     "prisma": "^4.5.0"
   },
   "dependencies": {

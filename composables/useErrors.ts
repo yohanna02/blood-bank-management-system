@@ -1,4 +1,4 @@
-import { ErrorDetailsI } from "~~/interface/AppError";
+import type { ErrorDetailsI } from "~~/interface/AppError";
 
 export default () => {
     const useErrorDetails = () => useState<ErrorDetailsI[] | null>("errorDetails", () => null);
