@@ -14,7 +14,7 @@
       <p class="sm:text-xl text-sm"><b>Pint available:</b> {{props.pintAvailable}}</p>
     </div>
     <div class="sm:w-full w-10/12 flex gap-10 justify-end items-center">
-        <NuxtLink :to="String('/blood/' + props.bloodGroupId)" class="outline-offset-8 transition ease-in cursor-pointer">
+        <NuxtLink :to="String('/admin/blood/' + props.bloodGroupId)" class="outline-offset-8 transition ease-in cursor-pointer">
             <IconsEdit class="w-5 transition duration-1000 ease-in-out hover:w-7" />
         </NuxtLink>
         <button class="outline-offset-8 transition ease-in  cursor-pointer" @click="deleteBloodGroup">

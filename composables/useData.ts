@@ -1,4 +1,4 @@
-import { BloodGroup, Donor } from "@prisma/client"
+import type { BloodGroup, Donor } from "@prisma/client";
 
 export interface DonorI extends Donor {
   bloodGroup: BloodGroup;

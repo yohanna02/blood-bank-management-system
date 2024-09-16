@@ -11,7 +11,8 @@ export default defineEventHandler(async (event) => {
         email: true,
         createdAt: true,
         bloodGroup: true,
-        location: true
+        location: true,
+        lastDonated: true
     }});
 
 

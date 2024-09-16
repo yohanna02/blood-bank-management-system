@@ -40,5 +40,6 @@ model Donor {
   phoneNumber  String
   password     String
   location     String
+  lastDonated  DateTime?
   createdAt    DateTime   @default(now())
 }

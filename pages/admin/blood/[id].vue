@@ -67,7 +67,7 @@ const updateBloodGroup = async () => {
     });
 
     alert("Updated successfully");
-    navigateTo("/blood");
+    navigateTo("/admin/blood");
   } catch(err: any) {
     alert("An Error Occured");
   }
@@ -85,7 +85,7 @@ const deleteBloodGroup = async () => {
     });
 
     alert(data.message);
-    navigateTo("/blood");
+    navigateTo("/admin/blood");
   } catch(err: any) {
     alert("An Error occured");
   }

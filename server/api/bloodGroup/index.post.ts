@@ -1,7 +1,10 @@
 import joi from "joi";
 import { createServerError } from "~~/interface/AppError";
+import jwt from "jsonwebtoken";
 
-import { BloodGroupI } from "~~/interface/Blood";
+const config = useRuntimeConfig();
+
+import type { BloodGroupI } from "~~/interface/Blood";
 import prisma from "~~/server/db";
 import { validator } from "~~/server/utils/validator";
 
@@ -11,6 +14,20 @@ const bloodGroupSchema = joi.object<BloodGroupI>({
 });
 
 export default defineEventHandler(async (event) => {
+    const token = event.node.req.headers.authorization?.split(" ")[1];
+
+    if (token) {
+        try {
+            const decodedToken: any = jwt.verify(token, config.jwtScecret);
+
+            if (decodedToken) {
+                const user = await prisma.user.findUnique({ where: { id: decodedToken.id } });
+                event.context.user = user;
+            }
+        } catch (err) {
+            event.context.user = null;
+        }
+    }
     if (!event.context.user) throw createServerError(401, "unauthorize");
 
     const body = await readBody<BloodGroupI>(event);

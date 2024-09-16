@@ -3,12 +3,12 @@
     <Title>Manage Donors</Title>
   </Head>
   <NuxtLayout>
-    <button
+    <!-- <button
       class="bg-red-500 hover:bg-red-700 rounded-md text-white w-1/2 mx-auto mt-4 p-4 block outline-offset-4"
       @click="showModal = !showModal"
     >
       Add Donor
-    </button>
+    </button> -->
 
     <h2 class="text-center mt-10 text-xl underline">Donor's List</h2>
 
@@ -21,6 +21,7 @@
           <th>Email</th>
           <th>Phone Number</th>
           <th>Location</th>
+          <th>Last Donation Date</th>
         </tr>
       </thead>
       <tbody>
@@ -31,6 +32,7 @@
           <td>{{donor.email}}</td>
           <td>{{donor.phoneNumber}}</td>
           <td>{{donor.location}}</td>
+          <td>{{donor.lastDonated && new Date(donor.lastDonated).toLocaleDateString()}}</td>
         </tr>
       </tbody>
     </table>
@@ -63,8 +65,6 @@ const fetchDonors = async() => {
         authorization: `Bearer ${useAccessToken().value}`
       }
     });
-
-    console.log(data);
 
     setDonor(data.donors);
   } catch(err) {
